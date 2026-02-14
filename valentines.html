@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For My Valentine ❤️</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Poppins:wght@300;400;600&family=Lora:ital,wght@1,400;1,600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --red: #d90429;
+            --pink: #ef233c;
+            --bg: #fff0f3;
+            --text-main: #2b2d42;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow: hidden; /* Locked initially */
+        }
+
+        /* --- HEART ANIMATION --- */
+        .heart-float {
+            position: fixed;
+            bottom: -10vh;
+            color: var(--pink);
+            font-size: 20px;
+            z-index: 0;
+            pointer-events: none;
+            animation: floatUp linear forwards;
+            opacity: 0.7;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* --- SCREENS --- */
+        .screen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            transition: opacity 1s ease-in-out;
+        }
+
+        #screen-ask {
+            z-index: 100;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            background: rgba(255, 255, 255, 0.9);
+            opacity: 1;
+        }
+
+        #screen-gallery {
+            z-index: 50;
+            display: none; /* Hidden initially */
+            opacity: 0;
+            overflow-y: auto; /* Scrollable */
+            padding: 40px 20px 80px;
+            background: linear-gradient(to bottom, #fff0f3, #ffffff);
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* --- CARD STYLES --- */
+        .card {
+            background: white;
+            padding: 40px 30px; border-radius: 30px;
+            border: 2px solid white; text-align: center;
+            box-shadow: 0 20px 60px rgba(217, 4, 41, 0.15);
+            max-width: 500px; width: 90%;
+            position: relative; z-index: 101;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem; color: var(--red);
+            margin-bottom: 10px; line-height: 1.1;
+        }
+
+        .subtitle { font-size: 1rem; color: #666; margin-bottom: 30px; }
+
+        .btn-box {
+            display: flex; justify-content: center; align-items: center;
+            gap: 15px; flex-wrap: wrap;
+        }
+
+        button {
+            padding: 15px 40px; border-radius: 50px; border: none;
+            font-size: 1.1rem; font-weight: 600; cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        #yes-btn { background: var(--red); color: white; }
+        #no-btn { background: #f0f0f0; color: #555; }
+
+        /* --- GALLERY LAYOUT (4 Pics per row) --- */
+        .gallery-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex; 
+            flex-direction: column;
+            gap: 30px;
+            position: relative; z-index: 51;
+        }
+
+        /* Love Letter */
+        .love-letter {
+            background: white; padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            font-family: 'Lora', serif;
+            line-height: 1.8; font-size: 1.1rem; color: #444;
+            border-top: 4px solid var(--red);
+            margin-bottom: 20px;
+            max-width: 800px;
+            margin-left: auto; 
+            margin-right: auto;
+        }
+
+        /* GRID FOR PHOTOS */
+        #photo-stack {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 4 Columns */
+            gap: 15px;
+            width: 100%;
+        }
+
+        /* PHOTO CARDS */
+        .photo-card {
+            background: white; padding: 10px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            opacity: 0; transform: scale(0.8);
+            display: flex; flex-direction: column;
+        }
+
+        @keyframes popIn {
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .photo-card:hover { transform: scale(1.05) !important; z-index: 10; }
+
+        .photo-card img {
+            width: 100%; 
+            height: 250px; /* Fixed height for neat rows */
+            object-fit: cover; /* Ensures photos don't stretch */
+            border-radius: 8px;
+            background-color: #f0f0f0;
+        }
+
+        .photo-card p {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.3rem; text-align: center;
+            margin-top: 8px; color: var(--text-main);
+        }
+
+        /* --- RESPONSIVE DESIGN --- */
+        @media (max-width: 900px) {
+            #photo-stack {
+                grid-template-columns: repeat(2, 1fr); /* 2 columns on Phones */
+            }
+            .love-letter {
+                padding: 25px;
+                font-size: 1rem;
+            }
+        }
+
+        /* --- MUSIC BUTTON --- */
+        .music-toggle {
+            position: fixed; top: 20px; right: 20px; z-index: 2000;
+            background: white; padding: 10px 20px; border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); cursor: pointer;
+            font-size: 0.85rem; font-weight: 600; color: var(--red);
+            border: 1px solid var(--red);
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" loop>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+    <div class="music-toggle" onclick="toggleMusic()">🎵 Play Music</div>
+
+    <div id="screen-ask" class="screen">
+        <div class="card">
+            <h1>Will you be my Valentine?</h1>
+            
+            
+            <div class="btn-box">
+                <button id="yes-btn" onclick="startLove()">YES! ❤️</button>
+                <button id="no-btn" onclick="insist()">No</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="screen-gallery" class="screen">
+        <div class="gallery-container">
+            
+            <div style="text-align: center; margin-bottom: 20px;">
+                <h1 style="font-size: 3.5rem;">She Said Yes! ❤️</h1>
+            </div>
+
+            <div class="love-letter">
+                <p><strong>To my Baby cutie Jannah,</strong></p>
+                <br>
+                <br>
+                <p>
+                    Helloooo, pwidi po ba kita maka date sa Valentine’s Day bukas plsssss po. 
+                    U so special kasi to me and u so pretty so much. Promise that you will enjoy this babyyyyyyy. 
+                    From the moment I’ve met you, you've brought so much light into my life. 
+                    Makikita sa pics natin baby ang bawat masasayang moments and masasayang memories natin togetherr. 
+                </p>
+                <br>
+                <p>
+                    Here are some of my favorite photos natin together. YIPIEEEEEE SO MUCHHHH. YEHEYYYY BABY!
+                </p>
+                <br>
+                <p>Happy Valentine's Day! 🌹</p>
+                <br>
+                <p style="text-align: right;"><strong>- Love, Lance</strong></p>
+            </div>
+
+            <div id="photo-stack"></div>
+
+            <div style="text-align: center; margin-top: 40px; color: #888; padding-bottom: 40px;">
+                Forever & Always ❤️
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- CONFIGURATION ---
+        const totalImages = 27; // iimages1.jpeg to iimages27.jpeg
+
+        // --- VARIABLES ---
+        const yesBtn = document.getElementById('yes-btn');
+        const noBtn = document.getElementById('no-btn');
+        const screenAsk = document.getElementById('screen-ask');
+        const screenGallery = document.getElementById('screen-gallery');
+        const audio = document.getElementById('bgMusic');
+        let clickCount = 0;
+
+        // --- 1. HANDLE "NO" CLICK ---
+        function insist() {
+            clickCount++;
+            // Grow Yes / Shrink No
+            const yesScale = 1 + (clickCount * 0.5);
+            yesBtn.style.transform = `scale(${yesScale})`;
+            const noScale = Math.max(0, 1 - (clickCount * 0.1));
+            noBtn.style.transform = `scale(${noScale})`;
+            // Change Text
+            const phrases = ["No", "Are you sure?", "Pls BABY", "Don't do this baby q", "I'm sad", "Click Yes plsss po!"];
+            noBtn.innerText = phrases[Math.min(clickCount, phrases.length - 1)];
+        }
+
+        // --- 2. HANDLE "YES" CLICK ---
+        function startLove() {
+            playAudio();
+            startFloatingHearts();
+
+            // Transition
+            screenAsk.style.opacity = '0';
+            setTimeout(() => {
+                screenAsk.style.display = 'none';
+                screenGallery.style.display = 'block';
+                loadImages();
+                
+                // Fade In Gallery
+                setTimeout(() => {
+                    screenGallery.style.opacity = '1';
+                    document.body.style.overflowY = 'auto'; 
+                }, 50);
+            }, 800);
+        }
+
+        // --- 3. FLOATING HEART ENGINE ---
+        function startFloatingHearts() {
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.classList.add('heart-float');
+                heart.innerHTML = "❤️";
+                heart.style.left = Math.random() * 100 + "vw";
+                heart.style.fontSize = Math.random() * 20 + 20 + "px";
+                heart.style.animationDuration = Math.random() * 3 + 4 + "s";
+                document.body.appendChild(heart);
+                setTimeout(() => { heart.remove() }, 8000);
+            }, 300);
+        }
+
+        // --- 4. LOAD IMAGES (4 Cols) ---
+        function loadImages() {
+            const stack = document.getElementById('photo-stack');
+            stack.innerHTML = ''; 
+            
+            for(let i = 1; i <= totalImages; i++) {
+                const imgContainer = document.createElement('div');
+                imgContainer.className = 'photo-card';
+                
+                // Staggered animation
+                imgContainer.style.animationDelay = `${i * 0.05}s`; 
+
+                // Image with Error Handling (.jpeg -> .jpg fallback)
+                const img = document.createElement('img');
+                img.src = `iimage${i}.jpeg`;
+                
+                img.onerror = function() {
+                    console.log(`Failed ${this.src}, trying .jpg`);
+                    this.onerror = null;
+                    this.src = `iimage${i}.jpg`; 
+                };
+
+                const caption = document.createElement('p');
+                caption.innerText = `Memory #${i}`;
+
+                imgContainer.appendChild(img);
+                imgContainer.appendChild(caption);
+                stack.appendChild(imgContainer);
+            }
+        }
+
+        // --- 5. AUDIO HANDLING ---
+        function playAudio() {
+            audio.play().catch(error => { console.log("User interaction needed for audio"); });
+        }
+
+        function toggleMusic() {
+            if (audio.paused) audio.play();
+            else audio.pause();
+        }
+    </script>
+</body>
+</html>
